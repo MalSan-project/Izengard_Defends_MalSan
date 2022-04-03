@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b567c431c84a5f4584e5772039587d4, type: 3}
   m_Name: quiver
   m_EditorClassIdentifier: 
-  _itemType: 21
+  _itemType: 23
   _itemMesh: {fileID: 4300112, guid: 1851e3e6c3e77d648a0cc1ef90d895fa, type: 3}
   _attackModificator: 0
   _deffendsModificator: 0

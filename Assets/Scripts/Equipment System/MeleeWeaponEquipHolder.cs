@@ -26,15 +26,15 @@ namespace EquipSystem
 
         public  void GetEquipped(IEquippable item)
         {
-            if (equipHolderMesh.mesh!=item.ItemMesh)
+            if (equipHolderMesh.sharedMesh!=item.ItemMesh && _holderType == item.ItemType)
             { 
-                equipHolderMesh.mesh = item.ItemMesh;                
+                equipHolderMesh.sharedMesh = item.ItemMesh;                
             }
         }
 
         public  void UnEquiped(IEquippable item)
         {
-            if (item.ItemMesh == equipHolderMesh.sharedMesh)
+            if (item.ItemMesh == equipHolderMesh.sharedMesh && _holderType == item.ItemType)
             {
                 equipHolderMesh.sharedMesh = equipHolderMeshBase;                
             }

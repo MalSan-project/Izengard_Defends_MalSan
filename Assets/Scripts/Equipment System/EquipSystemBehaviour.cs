@@ -11,9 +11,10 @@ namespace EquipSystem
         Body,
         Arms,
         Legs,
-        Worker=20,
-        Quiver,        
-        ResurseCraft,
+        WorkerWeapon=20,
+        Bags,
+        Resurses,
+        Quiver,
         LeftHandMeleeWeapon,
         RightHandMeleeWeapon,
         LeftHandShield,
@@ -32,9 +33,9 @@ namespace EquipSystem
         
         private ArmourEquipHolder[] _armourEquipHolders;
         private IWeaponEquipped[] _weaponEquipHolders;
-        private WorkerEquipHolder _workerEquipHolder;
+        private WorkerEquipHolder[] _workerEquipHolder;
 
-        private bool isIsWorker = true;
+        private bool isIsWorker = false;
 
         public void Awake()
         {
@@ -44,13 +45,12 @@ namespace EquipSystem
         {
             _armourEquipHolders = gameObject.GetComponentsInChildren<ArmourEquipHolder>();
             _weaponEquipHolders = gameObject.GetComponentsInChildren<IWeaponEquipped>();
-            _workerEquipHolder= gameObject.GetComponentInChildren<WorkerEquipHolder>();
+            _workerEquipHolder= gameObject.GetComponentsInChildren<WorkerEquipHolder>();
         }
 
         public void GetEquipArmour(IEquippable item)
         {
-            UnEquipWorker(isIsWorker);
-            isIsWorker = false;
+            UnEquipWorkerAll();            
             foreach (ArmourEquipHolder holder in _armourEquipHolders)
             {
                 if (item.ItemType == holder.HolderType)
@@ -82,11 +82,10 @@ namespace EquipSystem
                     break;
 
                 case EquipType.LeftHandMeleeWeapon :
-                    UnEquipWorker(isIsWorker);
-                    isIsWorker = false;
+                    UnEquipWorkerAll();
                     foreach (IWeaponEquipped holder in _weaponEquipHolders)
                     {
-                        if (holder.HolderType==EquipType.LeftHandShield|| holder.HolderType == EquipType.Bow || holder.HolderType == EquipType.Quiver)
+                        if (holder.HolderType==EquipType.LeftHandShield | holder.HolderType == EquipType.Bow  | holder.HolderType == EquipType.Quiver)
                         {
                             holder.UnEquiped();
                         }
@@ -97,8 +96,7 @@ namespace EquipSystem
                     }break;
 
                 case EquipType.RightHandMeleeWeapon:
-                    UnEquipWorker(isIsWorker);
-                    isIsWorker = false;
+                    UnEquipWorkerAll();
                     foreach (IWeaponEquipped holder in _weaponEquipHolders)
                     {
                         if (holder.HolderType == EquipType.Bow || holder.HolderType == EquipType.Quiver)
@@ -113,11 +111,10 @@ namespace EquipSystem
                     break;
 
                 case EquipType.LeftHandShield:
-                    UnEquipWorker(isIsWorker);
-                    isIsWorker = false;
+                    UnEquipWorkerAll();
                     foreach (IWeaponEquipped holder in _weaponEquipHolders)
                     {
-                        if (holder.HolderType == EquipType.Bow | holder.HolderType == EquipType.Quiver)
+                        if (holder.HolderType == EquipType.Bow || holder.HolderType == EquipType.Quiver || holder.HolderType == EquipType.LeftHandMeleeWeapon)
                         {
                             holder.UnEquiped();
                         }
@@ -126,10 +123,9 @@ namespace EquipSystem
                             holder.GetEquipped(item);
                         }
                     }                    
-                    break;
+                    break;                
                 case EquipType.Bow :
-                    UnEquipWorker(isIsWorker);
-                    isIsWorker = false;
+                    UnEquipWorkerAll();
                     foreach (IWeaponEquipped holder in _weaponEquipHolders)
                     {
                         if (holder.HolderType == EquipType.LeftHandMeleeWeapon | holder.HolderType == EquipType.RightHandMeleeWeapon | holder.HolderType == EquipType.LeftHandShield)
@@ -142,13 +138,15 @@ namespace EquipSystem
                         }
                     }
                     break;
-                case (EquipType.Worker ):
-                    isIsWorker = true;
-                    GetWorker();
+                case (EquipType.WorkerWeapon):                    
+                    GetWorker(item);                    
                     break;
-
-
-
+                case (EquipType.Bags):
+                    GetWorker(item);
+                    break;
+                case (EquipType.Resurses):
+                    GetWorker(item);
+                    break;            
             }
         }
         public void UnEquiped(IEquippable item)
@@ -175,48 +173,47 @@ namespace EquipSystem
                     {                        
                         if (item.ItemType == holder.HolderType)
                         {
-                            holder.GetEquipped(item);
+                            holder.UnEquiped(item);
                         }
                     }
                     break;
 
-                case EquipType.RightHandMeleeWeapon:
-                    UnEquipWorker(isIsWorker);
-                    isIsWorker = false;
+                case EquipType.RightHandMeleeWeapon:                    
                     foreach (IWeaponEquipped holder in _weaponEquipHolders)
                     {                        
                         if (item.ItemType == holder.HolderType)
                         {
-                            holder.GetEquipped(item);
+                            holder.UnEquiped(item);
                         }
                     }
                     break;
 
-                case EquipType.LeftHandShield:
-                    UnEquipWorker(isIsWorker);
-                    isIsWorker = false;
+                case EquipType.LeftHandShield:                   
                     foreach (IWeaponEquipped holder in _weaponEquipHolders)
                     {                        
                         if (item.ItemType == holder.HolderType)
                         {
-                            holder.GetEquipped(item);
+                            holder.UnEquiped(item);
                         }
                     }
                     break;
-                case EquipType.Bow:
-                    UnEquipWorker(isIsWorker);
-                    isIsWorker = false;
+                case EquipType.Bow:                                       
                     foreach (IWeaponEquipped holder in _weaponEquipHolders)
                     { 
                         if (item.ItemType == holder.HolderType)
                         {
-                            holder.GetEquipped(item);
+                            holder.UnEquiped(item);
                         }
                     }
                     break;
-                case (EquipType.Worker):
-                    isIsWorker = true;
-                    GetWorker();
+                case (EquipType.WorkerWeapon):
+                    UnEquipWorker(item);                    
+                    break;
+                case (EquipType.Resurses):
+                    UnEquipWorker(item);
+                    break;
+                case (EquipType.Bags):
+                    UnEquipWorker(item);
                     break;
             }
         }
@@ -231,10 +228,18 @@ namespace EquipSystem
                 }
             }
         }
-        public void GetWorker()
+        public void GetWorker(IEquippable item)
         {
-            UnEquipAllWeapons();
-            UnEquipAllArmour();
+            if (!isIsWorker)
+            {
+                UnEquipAllWeapons();
+                UnEquipAllArmour();
+            }
+            foreach (WorkerEquipHolder holder in _workerEquipHolder)
+            {
+                holder.GetEquipped(item);
+            }
+            isIsWorker = true;
 
         }
         public void UnEquipAllArmour()
@@ -251,12 +256,26 @@ namespace EquipSystem
                 holder.UnEquiped();
             }
         }
-        public void UnEquipWorker(bool workerFlag)
+        public void UnEquipWorker( IEquippable item)
         {
-            if (workerFlag)
+            if (isIsWorker)
             {
-                _workerEquipHolder.UnEquiped();
+                foreach (WorkerEquipHolder holder in _workerEquipHolder)
+                {
+                    holder.UnEquiped(item);
+                }
             }
+        }
+        public void UnEquipWorkerAll()
+        {  
+            if (isIsWorker)
+            { 
+                foreach (WorkerEquipHolder holder in _workerEquipHolder)
+                {
+                    holder.UnEquiped();
+                }
+            }
+            isIsWorker = false;
         }
         public void OnValidate()
         {

@@ -34,11 +34,12 @@ namespace EquipSystem
             equipHolderMesh = gameObject.GetComponent<MeshFilter>();
             equipHolderMeshBase = equipHolderMesh.sharedMesh;
             _quiverHolder.GetComponent<MeshFilter>().sharedMesh = _quiverItem.ItemMesh;
+            _quiverHolder.SetActive(false);
         }
 
         public void GetEquipped(IEquippable item)
         {
-            if (equipHolderMesh.mesh != item.ItemMesh)
+            if (equipHolderMesh.mesh != item.ItemMesh && _holderType == item.ItemType)
             {
                 equipHolderMesh.mesh = item.ItemMesh;
                 _quiverHolder.SetActive(true);
@@ -47,7 +48,7 @@ namespace EquipSystem
 
         public void UnEquiped(IEquippable item)
         {
-            if (item.ItemMesh == equipHolderMesh.sharedMesh)
+            if (item.ItemMesh == equipHolderMesh.sharedMesh && _holderType == item.ItemType)
             {
                 equipHolderMesh.sharedMesh = equipHolderMeshBase;
                 _quiverHolder.SetActive(false);

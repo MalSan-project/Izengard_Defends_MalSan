@@ -26,7 +26,7 @@ namespace EquipSystem
 
         public void GetEquipped(IEquippable item)
         {
-            if (ArmourEquipHolderMesh.sharedMesh != item.ItemMesh)
+            if (ArmourEquipHolderMesh.sharedMesh != item.ItemMesh && _holderType == item.ItemType)
             {
                 ArmourEquipHolderMesh.sharedMesh = item.ItemMesh;                 
             }
@@ -34,7 +34,7 @@ namespace EquipSystem
 
         public void UnEquiped(IEquippable item)
         {
-            if (item.ItemMesh == ArmourEquipHolderMesh.sharedMesh)
+            if (item.ItemMesh == ArmourEquipHolderMesh.sharedMesh && _holderType == item.ItemType)
                 ArmourEquipHolderMesh.sharedMesh = ArmourEquipHolderMeshBase;
         }
 
